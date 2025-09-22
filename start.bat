@@ -1,0 +1,9 @@
+@echo off
+echo Starting Image Embedding Service...
+echo.
+echo Installing dependencies...
+pip install -r requirements.txt
+echo.
+echo Starting Python Flask server...
+python app.py
+pause

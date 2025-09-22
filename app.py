@@ -197,6 +197,28 @@ def embed_batch_images():
         logger.error(f"Error processing batch images: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
+    try:
+        if model is None or processor is None:
+            return jsonify({
+                "status": "unhealthy",
+                "error": "Model not loaded"
+            }), 500
+        
+        return jsonify({
+            "status": "healthy",
+            "model": "facebook/dinov2-base",
+            "device": str(device),
+            "service": "Image Embedding Service"
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "unhealthy",
+            "error": str(e)
+        }), 500
+
 @app.route('/model/info', methods=['GET'])
 def model_info():
     """Get model information"""
@@ -208,7 +230,7 @@ def model_info():
 if __name__ == '__main__':
     if initialize_model():
         logger.info("Starting Image Embedding Service...")
-        app.run(host='0.0.0.0', port=5001, debug=False)
+        app.run(host='0.0.0.0', port=5000, debug=False)
     else:
         logger.error("Failed to initialize model. Exiting.")
         exit(1)
